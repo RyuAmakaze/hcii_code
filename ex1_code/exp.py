@@ -21,27 +21,29 @@ if __name__ == '__main__':
 
         while True:
             key = ord(getch())
-            if key == 72: #上矢印
+            if key == 48: #上矢印
                 print("↑")
                 pro.terminate()#プロセス終了
                 if alpha != 20:
                     alpha = alpha + 1#空気音に1近づける
                 cmd = "python sub.py "+str(name)+" "+str(alpha)
                 pro = subprocess.Popen(cmd)
-            elif key == 80: #下矢印
+            elif key == 55: #下矢印
                 print("↓")
                 pro.terminate()
                 if alpha != 0:
                     alpha = alpha - 1#骨伝導音に1近づける
                 cmd = "python sub.py "+str(name)+" "+str(alpha)
                 pro = subprocess.Popen(cmd)
-            elif key == 13:#エンターなら
+            elif key == 56:#ボタンを押されたら
                 print("Enter")
-                print("*****************************")
+                print("************Thank you*****************")
                 print("")
+                print("")
+                print("***************Start******************")
                 pro.terminate()
                 list.append(alpha)
-                print("alpha : " + str(alpha))
+                ##print("alpha : " + str(alpha))
                 break
 
     writer.writerow(list)

@@ -1,3 +1,5 @@
+##CMDで音を再生するプログラム
+
 import sys
 import wave
 import pyaudio
