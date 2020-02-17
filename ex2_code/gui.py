@@ -4,6 +4,7 @@ import random
 import sys
 import csv
 import subprocess
+#from test import open
 
 x = 0
 y = 0
@@ -16,20 +17,15 @@ exp_code = int(args[2])#0:inner_plus_trial, 1:inner_minus_trial, 2:robot_plus_tr
 #記録用CSVファイル作成######################
 list=[]
 list_inner=[]
-
-trial = 10 + random.randrange(11)#赤丸の出現回数、15以上25以下
-inner = 5 + random.randrange(6)#inner number5以上10以下
-
-list.append(trial)
-list_inner.append(inner)
-
-red_i = trial##赤丸の出現回数が答え
-blue_i = 25 - trial
-print("correct number : " + str(trial))
-print("stimu number : " + str(inner))
-
 x_list=[]
 y_list=[]
+
+red_i = 0##赤丸の出現回数が答え
+blue_i = 0
+inner = 6 + random.randrange(5)#inner number5以上12以下
+#iiner2 = 8 + random.randrange(8)#inner
+print("stimu number : " + str(inner))
+
 ##########################################
 
 window = tk.Tk()
@@ -44,14 +40,6 @@ def move():
     canvas.delete('ball')##以前の玉を消す
     i = i + 1##iがtrial以下ならば、玉の出現を続ける。
 
-    ##青丸か赤丸かの認知タスクを加える。
-    if((random.randrange(3)==0)&(blue_i!=0)):
-        canvas.create_oval(200+x, 200+y, 100+x, 100+y, fill='blue', tags='ball')
-        blue_i = blue_i - 1
-    else:
-        canvas.create_oval(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
-        red_i = red_i - 1
-
     ##丸の出現場所を決める
     temx = x
     temy = y
@@ -65,28 +53,50 @@ def move():
     x_list.append(x)
     y_list.append(y)
 
-    ##音響刺激を特徴づける。
-    if((red_i==(trial-inner))&(flag==0)):##inner回数目の赤玉出現時にinner刺激
+    ##青丸か赤丸かの認知タスクを加える。
+    flag2 = random.randrange(3)
+    if(red_i==inner):
+        flag2 = 1
+    if(flag2==2):
+        if(blue_i<=15):
+            canvas.create_rectangle(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
+            blue_i = blue_i + 1
+        else:
+            canvas.create_oval(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
+            red_i = red_i + 1
+
+    if(flag2<2):
+        if(red_i<=15):
+            canvas.create_oval(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
+            red_i = red_i + 1
+        else:
+            canvas.create_rectangle(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
+            blue_i = blue_i + 1
+
+    ##音響刺激の選択、および再生
+    if((red_i==inner)&(flag==0)):##inner回数目の赤玉出現時にinner刺激
         flag = 1
+        print("iiner")
         if(exp_code==0):
-            cmd = "python sub.py "+str(name)+" "+str(inner+2)
-            pro = subprocess.Popen(cmd)
-        if(exp_code==1):
             cmd = "python sub.py "+str(name)+" "+str(inner)
             pro = subprocess.Popen(cmd)
-        if(exp_code==2):
-            cmd = "python sub.py robot robot"+str(inner+2)
-            pro = subprocess.Popen(cmd)
-        if(exp_code==3):
+        if(exp_code==1):
             cmd = "python sub.py robot robot"+str(inner)
             pro = subprocess.Popen(cmd)
-        if(exp_code==4):
+            #print("inner")
+            #open("robot/robot" + str(inner))
+        if(exp_code==2):
             cmd = "python sub.py robot noise"
             pro = subprocess.Popen(cmd)
 
+
     if(i<25):
         window.after(500, move)
-    else:
+    else:##一試行の終了
+        print("correct number : " + str(red_i))
+        list.append(red_i)
+        list_inner.append(inner)
+
         xl = open(name+"/"+str(exp_code)+"x_pos.csv", 'a')
         x_writer = csv.writer(xl, lineterminator="\n")
         yl = open(name+"/"+str(exp_code)+"y_pos.csv", 'a')
@@ -100,6 +110,7 @@ def move():
         writer_inner.writerow(list_inner)
         x_writer.writerow(x_list)
         y_writer.writerow(y_list)
+
 window.after(500, move)
 window.geometry('-2100+350')##キャンバスの位置を決定
 tk.mainloop()
