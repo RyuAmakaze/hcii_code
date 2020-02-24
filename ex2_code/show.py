@@ -3,5 +3,5 @@ import time
 import cv2
 
 show_str("answer")
-time.sleep(3)
+time.sleep(2)
 cv2.destroyAllWindows()

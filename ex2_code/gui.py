@@ -19,10 +19,11 @@ list=[]
 list_inner=[]
 x_list=[]
 y_list=[]
+kind_list = []
 
 red_i = 0##赤丸の出現回数が答え
 blue_i = 0
-inner = 6 + random.randrange(5)#inner number5以上12以下
+inner = 5 + random.randrange(6)#inner number5以上10以下
 #iiner2 = 8 + random.randrange(8)#inner
 print("stimu number : " + str(inner))
 
@@ -54,29 +55,34 @@ def move():
     y_list.append(y)
 
     ##青丸か赤丸かの認知タスクを加える。
-    flag2 = random.randrange(3)
-    if(red_i==inner):
+    flag2 = random.randrange(4)
+    if(red_i==inner):##刺激を与えるときは必ず赤丸を出現させる
         flag2 = 1
-    if(flag2==2):
-        if(blue_i<=15):
+    if(flag2==3):
+        if(blue_i<15-inner-1):
             canvas.create_rectangle(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
             blue_i = blue_i + 1
+            kind_ball = 0#出現図形の記録用
         else:
             canvas.create_oval(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
             red_i = red_i + 1
+            kind_ball = 1
 
-    if(flag2<2):
+    if(flag2<3):
         if(red_i<=15):
             canvas.create_oval(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
             red_i = red_i + 1
+            kind_ball = 1
         else:
             canvas.create_rectangle(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
             blue_i = blue_i + 1
+            kind_ball = 0
+    kind_list.append(kind_ball)
 
     ##音響刺激の選択、および再生
     if((red_i==inner)&(flag==0)):##inner回数目の赤玉出現時にinner刺激
         flag = 1
-        print("iiner")
+        #print("iiner")
         if(exp_code==0):
             cmd = "python sub.py "+str(name)+" "+str(inner)
             pro = subprocess.Popen(cmd)
@@ -90,7 +96,7 @@ def move():
             pro = subprocess.Popen(cmd)
 
 
-    if(i<25):
+    if(i<15):
         window.after(500, move)
     else:##一試行の終了
         print("correct number : " + str(red_i))
@@ -105,11 +111,14 @@ def move():
         writer = csv.writer(f, lineterminator="\n")
         g = open(name+"/"+str(exp_code)+"inner_number.csv", 'a')
         writer_inner = csv.writer(g, lineterminator="\n")
+        kind = open(name+"/"+str(exp_code)+"kind_ball.csv", 'a')
+        kind_writer = csv.writer(kind, lineterminator="\n")
 
         writer.writerow(list)
         writer_inner.writerow(list_inner)
         x_writer.writerow(x_list)
         y_writer.writerow(y_list)
+        kind_writer.writerow(kind_list)
 
 window.after(500, move)
 window.geometry('-2100+350')##キャンバスの位置を決定

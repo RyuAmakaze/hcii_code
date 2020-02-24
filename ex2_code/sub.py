@@ -1,6 +1,9 @@
 import sys
 import wave
 import pyaudio
+import time
+
+time.sleep(0.2)
 
 args = sys.argv
 
