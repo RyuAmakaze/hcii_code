@@ -22,13 +22,15 @@ import gazetrack.*;
 PrintWriter file;
 GazeTrack gazeTrack;
 
-int cnt;
+int cnt,i;
 int showFlag = 1;
 double[][] data = new double[9999][4];
 
+String name = "test";
+
 void setup() 
 {
-  file = createWriter("terashima.csv");
+  file = createWriter(name+".csv");
   
   //fullScreen();
   
@@ -49,8 +51,13 @@ void setup()
 void draw() 
 {
   //background(255);
+  i = i + 1;
   
-  if (gazeTrack.gazePresent())
+  //if(i%3000==0){
+  // file = createWriter(name+str(i)+".csv");
+  //}
+  
+  if ((gazeTrack.gazePresent())&&(i%10==0))
   {
     ellipse(gazeTrack.getGazeX(), gazeTrack.getGazeY(), 80, 80);
     
