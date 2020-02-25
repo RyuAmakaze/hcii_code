@@ -15,7 +15,7 @@ list_exp = [inner_trial,robot_trial,noise_trial]
 
 if __name__ == '__main__':
     trial = 90 #試行回数
-    name = "yamaoka" #被験者の名前
+    name = "terashima" #被験者の名前
     exp_order_list = []
 
     for i in range(trial):
@@ -36,7 +36,7 @@ if __name__ == '__main__':
             cv2.destroyAllWindows()
             cmd = "python gui.py " + name + " " + str(exp_code)##python gui.py name exp_code{0,1,2,3}でgui実行
             pro = subprocess.Popen(cmd)
-            time.sleep(9)
+            time.sleep(8)
             pro.terminate()
 
             cmd2 = "python show.py"

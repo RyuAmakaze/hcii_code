@@ -3,7 +3,8 @@ import wave
 import pyaudio
 import time
 
-time.sleep(0.2)
+#time.sleep(0.2)
+t0 = time.time()
 
 args = sys.argv
 
@@ -22,3 +23,6 @@ while data != b'':
     data = wf.readframes(chunk)
 stream.close()
 p.terminate()
+
+t1 = time.time()
+print("再生時間："+str(t1-t0)+"[s]")

@@ -4,6 +4,7 @@ import random
 import sys
 import csv
 import subprocess
+from tkinter import font
 #from test import open
 
 x = 0
@@ -20,10 +21,11 @@ list_inner=[]
 x_list=[]
 y_list=[]
 kind_list = []
+time_list = []
 
 red_i = 0##赤丸の出現回数が答え
 blue_i = 0
-inner = 5 + random.randrange(6)#inner number5以上10以下
+inner = 6 + random.randrange(5)#inner number6以上10以下
 #iiner2 = 8 + random.randrange(8)#inner
 print("stimu number : " + str(inner))
 
@@ -52,6 +54,7 @@ def move():
 
     ##x,yの位置座標保存用
     x_list.append(x)
+    time_list.append(time.time())
     y_list.append(y)
 
     ##青丸か赤丸かの認知タスクを加える。
@@ -59,7 +62,7 @@ def move():
     if(red_i==inner):##刺激を与えるときは必ず赤丸を出現させる
         flag2 = 1
     if(flag2==3):
-        if(blue_i<15-inner-1):
+        if(blue_i<15-inner-3):
             canvas.create_rectangle(200+x, 200+y, 100+x, 100+y, fill='red', tags='ball')
             blue_i = blue_i + 1
             kind_ball = 0#出現図形の記録用
@@ -97,20 +100,34 @@ def move():
 
 
     if(i<15):
-        window.after(500, move)
+        window.after(400, move)
     else:##一試行の終了
+        #canvas.delete('ball')
+        #font1 = font.Font(family="Times",size=50,weight="bold")
+        #label1 = tk.Label(window,text="Answer",font=font1)
+        #label1.place(x=500,y=200)
+        #time.sleep(2)
+        #print("test")
+
         print("correct number : " + str(red_i))
         list.append(red_i)
         list_inner.append(inner)
 
         xl = open(name+"/"+str(exp_code)+"x_pos.csv", 'a')
         x_writer = csv.writer(xl, lineterminator="\n")
+
         yl = open(name+"/"+str(exp_code)+"y_pos.csv", 'a')
         y_writer = csv.writer(yl, lineterminator="\n")
+
+        timel = open(name+"/"+str(exp_code)+"time.csv", 'a')
+        time_writer = csv.writer(timel, lineterminator="\n")
+
         f = open(name+"/"+str(exp_code)+"correct_number.csv", 'a')
         writer = csv.writer(f, lineterminator="\n")
+
         g = open(name+"/"+str(exp_code)+"inner_number.csv", 'a')
         writer_inner = csv.writer(g, lineterminator="\n")
+
         kind = open(name+"/"+str(exp_code)+"kind_ball.csv", 'a')
         kind_writer = csv.writer(kind, lineterminator="\n")
 
@@ -118,8 +135,9 @@ def move():
         writer_inner.writerow(list_inner)
         x_writer.writerow(x_list)
         y_writer.writerow(y_list)
+        time_writer.writerow(time_list)
         kind_writer.writerow(kind_list)
 
-window.after(500, move)
+window.after(400, move)
 window.geometry('-2100+350')##キャンバスの位置を決定
 tk.mainloop()
